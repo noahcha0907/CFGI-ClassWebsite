@@ -21,9 +21,12 @@
     </header>
     <div class="heading">
       <h1>Projects</h1>
-      <p class="heading__tag"><span>(Weekly)</span><span>(Final)</span></p>
+      <p class="heading__tag view-toggle">
+        <button type="button" data-view="weekly" aria-pressed="true">(Weekly)</button>
+        <button type="button" data-view="final" aria-pressed="false">(Final)</button>
+      </p>
     </div>
-    <ol class="rows">
+    <ol class="rows" id="project-list">
       <li class="project js-row" data-project="01" style="--spot: #63ff43" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="01">01</span><span class="project__title fx" data-text="Hello World and Algorithmic Drawing">Hello World and Algorithmic Drawing</span></li>
       <li class="project js-row" data-project="02" style="--spot: #ff3b2f" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="02">02</span><span class="project__title fx" data-text="Open GL, Generative Design">Open GL, Generative Design</span></li>
       <li class="project js-row" data-project="03" style="--spot: #2f5bff" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="03">03</span><span class="project__title fx" data-text="Image Processing">Image Processing</span></li>

@@ -284,3 +284,49 @@ if (tab) {
     if (e.key === "Escape") close();
   });
 }
+
+// Projects page: (Weekly) / (Final) toggle. "Final" moves project 10 to
+// the top of the list; "Weekly" puts it back at the end. Rows slide to
+// their new places.
+const viewButtons = document.querySelectorAll(".view-toggle button");
+const projectList = document.getElementById("project-list");
+
+if (viewButtons.length && projectList) {
+  const finalRow = projectList.querySelector('[data-project="10"]');
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  // Move rows, then animate each from its old spot to its new one.
+  const moveWithSlide = (move) => {
+    const items = [...projectList.children];
+    const before = new Map(items.map((el) => [el, el.getBoundingClientRect().top]));
+    move();
+    if (reduceMotion.matches) return;
+    items.forEach((el) => {
+      const shift = before.get(el) - el.getBoundingClientRect().top;
+      if (!shift) return;
+      el.animate(
+        [{ transform: `translateY(${shift}px)` }, { transform: "translateY(0)" }],
+        { duration: 500, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
+      );
+    });
+  };
+
+  const setView = (view) => {
+    viewButtons.forEach((btn) =>
+      btn.setAttribute("aria-pressed", String(btn.dataset.view === view))
+    );
+    const wantFirst = view === "final";
+    const isFirst = projectList.firstElementChild === finalRow;
+    if (wantFirst === isFirst) return;
+    moveWithSlide(() =>
+      wantFirst ? projectList.prepend(finalRow) : projectList.append(finalRow)
+    );
+  };
+
+  viewButtons.forEach((btn) =>
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation(); // don't close an open tab
+      setView(btn.dataset.view);
+    })
+  );
+}
