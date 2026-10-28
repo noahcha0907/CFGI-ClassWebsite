@@ -1,0 +1,286 @@
+// List interactions for the Projects and Students pages.
+// - Hover a row: the type gets a blurred spot-color overlay (CSS) and a
+//   strip of the tab peeks up from the bottom.
+// - Click a row: the full tab rises with a square per piece of work.
+//     Projects page -> one square per student for that project.
+//     Students page -> one square per project for that student.
+//   Click the row again, press Esc, or click outside to close.
+
+const STUDENTS = [
+  "Alisha Zhou",
+  "Candice Li",
+  "Em Ayuso Rizzo",
+  "Julia Primiero",
+  "Nicole Sun",
+  "Noah Cha",
+  "Runping Mao Wei",
+  "Sara Parulekar",
+  "Samuel Li",
+  "Susan He",
+  "Reid Surmeier",
+  "Yeonjai Song",
+  "Zihan Huang",
+];
+
+const PROJECTS = [
+  { num: "01", title: "Hello World and Algorithmic Drawing" },
+  { num: "02", title: "Open GL, Generative Design" },
+  { num: "03", title: "Image Processing" },
+  { num: "04", title: "3D Software" },
+  { num: "05", title: "Parametric 3D and Simulation" },
+  { num: "06", title: "Intro to User Interfaces" },
+  { num: "07", title: "UX" },
+  { num: "08", title: "Games as Interfaces" },
+  { num: "09", title: "HID" },
+  { num: "10", title: "Final Project" },
+];
+
+// Student links live in work.js (the WORK object), so students can fill
+// them in without touching this file.
+
+const tab = document.querySelector(".project-tab");
+const rows = document.querySelectorAll(".js-row");
+
+// The squares to show for a clicked row.
+function piecesFor(row) {
+  const { project, student } = row.dataset;
+  if (project) {
+    const title = PROJECTS.find((p) => p.num === project)?.title ?? "";
+    return STUDENTS.map((name) => ({
+      project,
+      student: name,
+      label: `${name} — ${project} ${title}`,
+    }));
+  }
+  return PROJECTS.map((p) => ({
+    project: p.num,
+    student,
+    label: `${p.num} ${p.title} — ${student}`,
+  }));
+}
+
+if (tab) {
+  let openRow = null;
+
+  const setColor = (row) =>
+    tab.style.setProperty("--spot", row.style.getPropertyValue("--spot"));
+
+  // Only allow normal web links or local files, never "javascript:" etc.
+  const safeUrl = (value) => {
+    if (!value || typeof value !== "string") return "";
+    try {
+      const url = new URL(value.trim(), document.baseURI);
+      return ["http:", "https:", "file:"].includes(url.protocol) ? url.href : "";
+    } catch {
+      return "";
+    }
+  };
+
+  // Each square links to the student's work and shows a preview of it:
+  // their thumbnail image if they gave one, otherwise a tiny live view
+  // of the linked page. Squares without a link stay gray.
+  const fillSquares = (row) => {
+    tab.replaceChildren(
+      ...piecesFor(row).map(({ project, student, label }) => {
+        const entry = (typeof WORK !== "undefined" && WORK[student]?.[project]) || {};
+        const link = safeUrl(entry.link);
+        const thumbnail = safeUrl(entry.thumbnail);
+
+        const square = document.createElement(link ? "a" : "span");
+        square.className = "work";
+        square.dataset.project = project;
+        square.dataset.student = student;
+        square.setAttribute("aria-label", label);
+
+        if (link) {
+          square.href = link;
+          square.target = "_blank";
+          square.rel = "noopener";
+        } else {
+          square.classList.add("is-empty");
+          square.tabIndex = 0; // still focusable so the big name shows
+        }
+
+        if (thumbnail) {
+          const img = document.createElement("img");
+          img.src = thumbnail;
+          img.alt = "";
+          img.loading = "lazy";
+          square.append(img);
+        } else if (link) {
+          const preview = document.createElement("iframe");
+          preview.src = link;
+          preview.title = "";
+          preview.loading = "lazy";
+          preview.tabIndex = -1;
+          preview.setAttribute("aria-hidden", "true");
+          preview.setAttribute("sandbox", "allow-scripts allow-same-origin");
+          square.append(preview);
+        }
+        return square;
+      })
+    );
+  };
+
+  const deactivate = () => {
+    if (!openRow) return;
+    openRow.classList.remove("is-active");
+    openRow.setAttribute("aria-expanded", "false");
+    openRow = null;
+  };
+
+  const open = (row) => {
+    deactivate();
+    openRow = row;
+    setColor(row);
+    fillSquares(row);
+    row.classList.add("is-active");
+    row.setAttribute("aria-expanded", "true");
+    tab.inert = false;
+    tab.classList.add("is-open");
+    document.body.classList.add("tab-open");
+  };
+
+  const close = () => {
+    if (!openRow) return;
+    deactivate();
+    bigName.classList.remove("is-on");
+    tab.classList.remove("is-open", "is-peek");
+    tab.inert = true;
+    document.body.classList.remove("tab-open");
+  };
+
+  const peek = (row) => {
+    if (openRow) return; // don't change an open tab on hover
+    setColor(row);
+    tab.classList.add("is-peek");
+  };
+  const unpeek = () => tab.classList.remove("is-peek");
+
+  rows.forEach((row) => {
+    row.addEventListener("mouseenter", () => peek(row));
+    row.addEventListener("mouseleave", unpeek);
+    row.addEventListener("focus", () => peek(row));
+    row.addEventListener("blur", unpeek);
+    row.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openRow === row ? close() : open(row);
+    });
+    row.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        row.click();
+      }
+    });
+  });
+
+  // Hovering a square shows a name huge and blurred over the page:
+  // the student's name on the Projects page, the project title on the
+  // Students page.
+  const bigName = document.createElement("div");
+  bigName.className = "work-name";
+  bigName.setAttribute("aria-hidden", "true");
+  document.body.append(bigName);
+
+  // Split text into at most `count` lines of similar length, breaking
+  // only between words.
+  const splitLines = (text, count) => {
+    const words = text.trim().split(/\s+/);
+    if (words.length <= 1 || count <= 1) return [words.join(" ")];
+    if (words.length <= count) return words;
+    let best = null;
+    let bestLongest = Infinity;
+    // Try every way to place the line breaks; keep the most even one.
+    const tryBreaks = (start, linesLeft, lines) => {
+      if (linesLeft === 1) {
+        const all = [...lines, words.slice(start).join(" ")];
+        const longest = Math.max(...all.map((l) => l.length));
+        if (longest < bestLongest) [best, bestLongest] = [all, longest];
+        return;
+      }
+      for (let end = start + 1; end <= words.length - linesLeft + 1; end++) {
+        tryBreaks(end, linesLeft - 1, [...lines, words.slice(start, end).join(" ")]);
+      }
+    };
+    tryBreaks(0, count, []);
+    return best;
+  };
+
+  const renderLines = (text, count) =>
+    bigName.replaceChildren(
+      ...splitLines(text, count).map((line) => {
+        const span = document.createElement("span");
+        span.textContent = line;
+        return span;
+      })
+    );
+
+  // One size for every big name on a page: the design size (276px), or
+  // smaller if needed so that the longest one fits the width AND the
+  // whole block ends above the open tab.
+  let sharedSize = null;
+  const getSharedSize = (texts, count) => {
+    if (sharedSize) return sharedSize;
+    const u = Math.max(1, window.innerWidth / 1728);
+    const designSize = 276.171 * u;
+    const maxWidth = 1526 * u;
+    const top = 287 * u;
+    const gap = 24 * u; // breathing room above the tab (and for the blur)
+    const maxHeight = window.innerHeight - tab.offsetHeight - top - gap;
+
+    bigName.style.fontSize = `${designSize}px`;
+    let widest = 0;
+    let mostLines = 1;
+    for (const text of texts) {
+      renderLines(text, count);
+      mostLines = Math.max(mostLines, bigName.children.length);
+      for (const span of bigName.children) {
+        widest = Math.max(widest, span.scrollWidth);
+      }
+    }
+    const lineHeight = 0.8; // matches .work-name line-height
+    const widthFit = maxWidth / widest;
+    const heightFit = maxHeight / (mostLines * lineHeight * designSize);
+    sharedSize = designSize * Math.max(0.1, Math.min(1, widthFit, heightFit));
+    return sharedSize;
+  };
+  window.addEventListener("resize", () => (sharedSize = null));
+  // Measure again once the web font has loaded.
+  document.fonts?.ready.then(() => (sharedSize = null));
+
+  const showName = (square) => {
+    // Projects page: student names in 2 lines.
+    // Students page: project titles in up to 3 lines.
+    const onProjectsPage = Boolean(openRow?.dataset.project);
+    const texts = onProjectsPage ? STUDENTS : PROJECTS.map((p) => p.title);
+    const count = onProjectsPage ? 2 : 3;
+    const size = getSharedSize(texts, count);
+    renderLines(
+      onProjectsPage
+        ? square.dataset.student
+        : PROJECTS.find((p) => p.num === square.dataset.project)?.title ?? "",
+      count
+    );
+    bigName.style.fontSize = `${size}px`;
+    bigName.style.setProperty("--spot", tab.style.getPropertyValue("--spot"));
+    bigName.classList.add("is-on");
+  };
+  const hideName = () => bigName.classList.remove("is-on");
+
+  tab.addEventListener("mouseover", (e) => {
+    const square = e.target.closest(".work");
+    square ? showName(square) : hideName();
+  });
+  tab.addEventListener("mouseleave", hideName);
+  tab.addEventListener("focusin", (e) => {
+    const square = e.target.closest(".work");
+    if (square) showName(square);
+  });
+  tab.addEventListener("focusout", hideName);
+
+  tab.addEventListener("click", (e) => e.stopPropagation());
+  document.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+  });
+}

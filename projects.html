@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projects — ctc-2156-01</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page page--projects">
+    <header class="topbar">
+      <p class="topbar__course">ctc-2156-01</p>
+      <nav class="topbar__nav" aria-label="Main">
+        <a href="student.html">Students</a>
+        <span aria-current="page">Projects</span>
+        <a href="info.html">Info</a>
+      </nav>
+    </header>
+    <div class="heading">
+      <h1>Projects</h1>
+      <p class="heading__tag"><span>(Weekly)</span><span>(Final)</span></p>
+    </div>
+    <ol class="rows">
+      <li class="project js-row" data-project="01" style="--spot: #63ff43" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="01">01</span><span class="project__title fx" data-text="Hello World and Algorithmic Drawing">Hello World and Algorithmic Drawing</span></li>
+      <li class="project js-row" data-project="02" style="--spot: #ff3b2f" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="02">02</span><span class="project__title fx" data-text="Open GL, Generative Design">Open GL, Generative Design</span></li>
+      <li class="project js-row" data-project="03" style="--spot: #2f5bff" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="03">03</span><span class="project__title fx" data-text="Image Processing">Image Processing</span></li>
+      <li class="project js-row" data-project="04" style="--spot: #ffd400" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="04">04</span><span class="project__title fx" data-text="3D Software">3D Software</span></li>
+      <li class="project js-row" data-project="05" style="--spot: #ff4fd8" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="05">05</span><span class="project__title fx" data-text="Parametric 3D and Simulation">Parametric 3D and Simulation</span></li>
+      <li class="project js-row" data-project="06" style="--spot: #00d2ff" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="06">06</span><span class="project__title fx" data-text="Intro to User Interfaces">Intro to User Interfaces</span></li>
+      <li class="project js-row" data-project="07" style="--spot: #ff8a00" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="07">07</span><span class="project__title fx" data-text="UX">UX</span></li>
+      <li class="project js-row" data-project="08" style="--spot: #8f3dff" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="08">08</span><span class="project__title fx" data-text="Games as Interfaces">Games as Interfaces</span></li>
+      <li class="project js-row" data-project="09" style="--spot: #00e09a" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="09">09</span><span class="project__title fx" data-text="HID">HID</span></li>
+      <li class="project js-row" data-project="10" style="--spot: #ff2d6f" tabindex="0" role="button" aria-expanded="false"><span class="project__num fx" data-text="10">10</span><span class="project__title fx" data-text="Final Project">Final Project</span></li>
+    </ol>
+    <footer class="footer">
+      <p>Harris Rosemblum</p>
+      <p>2026</p>
+    </footer>
+  </main>
+
+  <!-- Tab in the project's color: peeks up on hover, opens on click.
+       java.js fills it with one square per student. -->
+  <section class="project-tab" aria-label="Student work" inert></section>
+  <!-- work.js = the student links (students edit this file) -->
+  <script src="work.js"></script>
+  <script src="java.js"></script>
+</body>
+</html>

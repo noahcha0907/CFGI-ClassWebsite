@@ -1,0 +1,242 @@
+/* Sizes follow the 1728px-wide Figma frame. --u is one Figma pixel:
+   it grows on wider windows but never shrinks below 1px, so narrower
+   windows keep the design layout and scroll horizontally. */
+:root {
+  --u: max(1px, calc(100vw / 1728));
+  --ink: #000;
+  --muted: rgba(0, 0, 0, 0.2);
+  --paper: #fff;
+  --pad-x: calc(43 * var(--u));
+  --font: "Schibsted Grotesk", system-ui, sans-serif;
+
+  --fs-nav: calc(32 * var(--u));
+  --fs-title: calc(134.273 * var(--u));
+  --fs-tag: calc(48 * var(--u));
+  --fs-row: calc(96 * var(--u));
+  --fs-num: calc(117.142 * var(--u));
+  --fs-foot: calc(40 * var(--u));
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-weight: 400;
+  line-height: normal;
+  overflow-wrap: break-word;
+  overflow-x: auto;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: calc(11 * var(--u));
+  padding: calc(20 * var(--u)) var(--pad-x);
+  width: 100%;
+  min-width: 1728px;
+  min-height: 100vh;
+}
+.page--projects { --pad-x: calc(32 * var(--u)); }
+.page--info {
+  gap: calc(17 * var(--u));
+  padding-top: calc(37 * var(--u));
+  padding-bottom: calc(37 * var(--u));
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-nav);
+}
+.topbar__course { width: calc(601 * var(--u)); flex-shrink: 0; }
+.topbar__nav { display: flex; }
+.topbar__nav a,
+.topbar__nav span {
+  width: calc(372.3 * var(--u));
+  color: var(--muted);
+  transition: color 0.15s;
+}
+.topbar__nav a:hover,
+.topbar__nav a:focus-visible { color: var(--ink); }
+.topbar__nav [aria-current="page"] { cursor: default; }
+
+/* ---------- Page heading ---------- */
+.heading {
+  display: flex;
+  align-items: flex-start;
+  height: calc(128 * var(--u));
+  white-space: nowrap;
+}
+.page--info .heading { height: calc(163 * var(--u)); }
+.heading h1 {
+  font-size: var(--fs-title);
+  font-weight: 400;
+  line-height: normal;
+}
+.heading__tag {
+  font-size: var(--fs-tag);
+  font-weight: 700;
+  color: var(--muted);
+}
+.heading__tag span + span { margin-left: 0.25em; }
+
+/* ---------- Row lists ---------- */
+.rows { list-style: none; display: flex; flex-direction: column; gap: calc(11 * var(--u)); }
+
+.student {
+  border-bottom: 1px solid var(--ink);
+  padding: calc(18 * var(--u)) 0 calc(18 * var(--u)) calc(608 * var(--u));
+  font-size: var(--fs-row);
+  white-space: nowrap;
+}
+
+.project {
+  display: flex;
+  align-items: center;
+  gap: calc(460 * var(--u));
+  border-bottom: 1px solid var(--ink);
+  padding: calc(20 * var(--u)) 0;
+}
+.project__num {
+  flex-shrink: 0;
+  width: calc(150 * var(--u));
+  font-size: var(--fs-num);
+}
+.project__title {
+  max-width: calc(1091 * var(--u));
+  font-size: var(--fs-row);
+}
+
+/* Hover: a blurred copy of the type in the row's spot color sits on
+   top of the black type with a "difference" blend. Used on both lists. */
+.js-row { cursor: pointer; outline: none; }
+.fx { position: relative; }
+.fx::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: var(--spot);
+  mix-blend-mode: difference;
+  filter: blur(calc(5.734 * var(--u)));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.project__num.fx::after { filter: blur(calc(4.55 * var(--u))); }
+.js-row:hover .fx::after,
+.js-row:focus-visible .fx::after,
+.js-row.is-active .fx::after { opacity: 1; }
+
+/* Tab: one bar in the row's spot color, fixed to the bottom
+   of the window. Hover shows a 38px strip; click raises the whole tab
+   with a square per piece of work. */
+.project-tab {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: calc(12 * var(--u));
+  padding: calc(24 * var(--u)) var(--pad-x);
+  background: var(--spot, #000);
+  border-radius: calc(20 * var(--u)) calc(20 * var(--u)) 0 0;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+.project-tab.is-peek { transform: translateY(calc(100% - 38 * var(--u))); }
+.project-tab.is-open { transform: translateY(0); pointer-events: auto; }
+/* Only the colored strip shows while peeking, not the squares */
+.project-tab:not(.is-open) .work { visibility: hidden; }
+
+.work {
+  width: calc(115 * var(--u));
+  height: calc(115 * var(--u));
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: #d9d9d9;
+  cursor: pointer;
+  overflow: hidden;
+}
+.work { position: relative; display: block; }
+.work img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Live preview: render the linked page at ~1440px wide, then shrink it
+   down to the square (12.5 x 0.08 = 1). */
+.work iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1250%;
+  height: 1250%;
+  border: 0;
+  transform: scale(0.08);
+  transform-origin: 0 0;
+  pointer-events: none;
+  background: #fff;
+}
+.work.is-empty { cursor: default; }
+.work:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* Hovering a square: the name shows huge, blurred, difference-blended */
+.work-name {
+  position: fixed;
+  top: calc(287 * var(--u));
+  left: 50%;
+  width: calc(1526 * var(--u));
+  transform: translateX(-50%);
+  z-index: 9;
+  font-size: calc(276.171 * var(--u));
+  line-height: 0.8;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--spot, #000);
+  mix-blend-mode: difference;
+  filter: blur(0.0424em); /* 11.7px at the 276px design size; scales with the text */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.work-name.is-on { opacity: 1; }
+.work-name span {
+  display: block;
+  width: max-content;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+
+/* Leave room to scroll past the open tab */
+body.tab-open { padding-bottom: calc(163 * var(--u)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .project-tab { transition: none; }
+}
+
+/* ---------- Info ---------- */
+.about {
+  max-width: calc(1285 * var(--u));
+  font-size: var(--fs-row);
+}
+.about em { font-style: italic; }
+.about sup {
+  font-size: 0.645em;
+  line-height: 0;
+  vertical-align: 0.45em;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--fs-foot);
+  margin-top: auto;
+}
