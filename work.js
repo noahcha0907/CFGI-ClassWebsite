@@ -33,12 +33,12 @@ const WORK = {
   // ALISHA ZHOU
   // ------------------------------------------------------------------
   "Alisha Zhou": {
-    "01": { link: "", thumbnail: "" }, // Hello World and Algorithmic Drawing
-    "02": { link: "", thumbnail: "" }, // Open GL, Generative Design
-    "03": { link: "", thumbnail: "" }, // Image Processing
-    "04": { link: "", thumbnail: "" }, // 3D Software
-    "05": { link: "", thumbnail: "" }, // Parametric 3D and Simulation
-    "06": { link: "", thumbnail: "" }, // Intro to User Interfaces
+    "01": { link: "https://alishazhou.github.io/CFGI_BasicShader_Alisha/", thumbnail: "" }, // Hello World and Algorithmic Drawing
+    "02": { link: "https://alishazhou.github.io/CFGI_GenerativeDesign_AZ/", thumbnail: "" }, // Open GL, Generative Design
+    "03": { link: "https://alishazhou.github.io/week3-imageprocessing/", thumbnail: "" }, // Image Processing
+    "04": { link: "https://alishazhou.github.io/Graphics-and-Interfaces/Blender.html", thumbnail: "" }, // 3D Software
+    "05": { link: "https://alishazhou.github.io/Graphics-and-Interfaces/BlenderAnimation.html", thumbnail: "" }, // Parametric 3D and Simulation
+    "06": { link: "https://alishazhou.github.io/volume-slider/", thumbnail: "" }, // Intro to User Interfaces
     "07": { link: "", thumbnail: "" }, // UX
     "08": { link: "", thumbnail: "" }, // Games as Interfaces
     "09": { link: "", thumbnail: "" }, // HID
