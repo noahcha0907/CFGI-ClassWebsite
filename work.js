@@ -183,8 +183,8 @@ const WORK = {
     "04": { link: "https://su0511.github.io/Graphic_CTC/week4/index.html", thumbnail: "" }, // 3D Software
     "05": { link: "https://su0511.github.io/Graphic_CTC/week5/index.html", thumbnail: "" }, // Parametric 3D and Simulation
     "06": { link: "https://su0511.github.io/Graphic_CTC/week6/index.html", thumbnail: "" }, // Intro to User Interfaces
-    "07": { link: "https://su0511.github.io/Graphic_CTC/week7/index.html", thumbnail: "" }, // UX
-    "08": { link: "https://su0511.github.io/Graphic_CTC/week8/index.html", thumbnail: "" }, // Games as Interfaces
+    "07": { link: "", thumbnail: "" }, // UX
+    "08": { link: "", thumbnail: "" }, // Games as Interfaces
     "09": { link: "", thumbnail: "" }, // HID
     "10": { link: "", thumbnail: "" }, // Final Project
   },
