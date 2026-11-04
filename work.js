@@ -161,12 +161,12 @@ const WORK = {
   // SAMUEL LI
   // ------------------------------------------------------------------
   "Samuel Li": {
-    "01": { link: "", thumbnail: "" }, // Hello World and Algorithmic Drawing
-    "02": { link: "", thumbnail: "" }, // Open GL, Generative Design
-    "03": { link: "", thumbnail: "" }, // Image Processing
-    "04": { link: "", thumbnail: "" }, // 3D Software
-    "05": { link: "", thumbnail: "" }, // Parametric 3D and Simulation
-    "06": { link: "", thumbnail: "" }, // Intro to User Interfaces
+    "01": { link: "https://n4oya.github.io/samuel_assignment/week1_samuel.html", thumbnail: "" }, // Hello World and Algorithmic Drawing
+    "02": { link: "https://n4oya.github.io/samuel_assignment/week2_samuel.html", thumbnail: "" }, // Open GL, Generative Design
+    "03": { link: "https://n4oya.github.io/samuel_assignment/week3_samuel.html", thumbnail: "" }, // Image Processing
+    "04": { link: "https://n4oya.github.io/samuel_assignment/week4_samuel.html", thumbnail: "" }, // 3D Software
+    "05": { link: "https://n4oya.github.io/samuel_assignment/week5_samuel.html", thumbnail: "" }, // Parametric 3D and Simulation
+    "06": { link: "https://n4oya.github.io/samuel_assignment/week6_samuel.html", thumbnail: "" }, // Intro to User Interfaces
     "07": { link: "", thumbnail: "" }, // UX
     "08": { link: "", thumbnail: "" }, // Games as Interfaces
     "09": { link: "", thumbnail: "" }, // HID
